@@ -15,7 +15,8 @@ exports.handler = async (event, context) => {
   try {
     // Initialize Supabase client
     const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_ANON_KEY;
+    // Prefer service role key if provided (server-side only), fallback to anon key
+    const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
     
     if (!supabaseUrl || !supabaseKey) {
       console.error('Missing Supabase credentials');
