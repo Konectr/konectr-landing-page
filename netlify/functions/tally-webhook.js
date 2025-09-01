@@ -41,40 +41,46 @@ exports.handler = async (event, context) => {
     const formData = {};
     
     fields.forEach(field => {
-      switch(field.key) {
-        case 'email':
-          formData.email = field.value;
-          break;
-        case 'phone':
-        case 'phone_number':
-          formData.phone = field.value;
-          break;
-        case 'first_name':
-        case 'name':
-          formData.first_name = field.value;
-          break;
-        case 'gender':
-          formData.gender = field.value;
-          break;
-        case 'area':
-        case 'location':
-        case 'city':
-          formData.area = field.value;
-          break;
-        case 'age_range':
-        case 'age':
-          formData.age_range = field.value;
-          break;
-        case 'data_processing_consent':
-        case 'privacy_consent':
-          formData.data_processing_consent = field.value === 'Yes' || field.value === true;
-          break;
-        case 'marketing_consent':
-          formData.marketing_consent = field.value === 'Yes' || field.value === true;
-          break;
-        case 'women_only_features_consent':
-          formData.women_only_features_consent = field.value === 'Yes' || field.value === true;
-          break;
+      // Handle email
+      if (field.key === 'question_RDZOyJ') {
+        formData.email = field.value;
+      }
+      // Handle first name
+      else if (field.key === 'question_9721N5') {
+        formData.first_name = field.value;
+      }
+      // Handle phone
+      else if (field.key === 'question_o20JLV') {
+        formData.phone = field.value;
+      }
+      // Handle gender - extract text from options
+      else if (field.key === 'question_GRoMAo') {
+        if (field.value && field.value.length > 0 && field.options) {
+          const selectedOption = field.options.find(opt => opt.id === field.value[0]);
+          formData.gender = selectedOption ? selectedOption.text : null;
+        }
+      }
+      // Handle area - extract text from options
+      else if (field.key === 'question_O7jRM8') {
+        if (field.value && field.value.length > 0 && field.options) {
+          const selectedOption = field.options.find(opt => opt.id === field.value[0]);
+          formData.area = selectedOption ? selectedOption.text : null;
+        }
+      }
+      // Handle age range - extract text from options
+      else if (field.key === 'question_Vz9rOv') {
+        if (field.value && field.value.length > 0 && field.options) {
+          const selectedOption = field.options.find(opt => opt.id === field.value[0]);
+          formData.age_range = selectedOption ? selectedOption.text : null;
+        }
+      }
+      // Handle privacy policy consent
+      else if (field.key === 'question_Pz2oJb_a276fce3-5b76-4b23-8ec4-31911ed6aa1a') {
+        formData.data_processing_consent = field.value === true;
+      }
+      // Handle women-only features consent
+      else if (field.key === 'question_Pz2oJb_b382c7d6-5638-4a19-bc85-b90ad95c6b26') {
+        formData.women_only_features_consent = field.value === true;
       }
     });
 
