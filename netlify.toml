@@ -1,13 +1,20 @@
 # Netlify configuration for Konectr Landing Page
 [build]
   # No build command needed for static HTML
-  command = ""
+  command = "npm install"
   # Publish the root directory
   publish = "."
+  # Functions directory
+  functions = "netlify/functions"
 
 [build.environment]
   # Node version for any future builds
   NODE_VERSION = "18"
+
+# Environment variables for production (set these in Netlify dashboard)
+[context.production.environment]
+  # SUPABASE_URL = "your-supabase-url"
+  # SUPABASE_ANON_KEY = "your-supabase-anon-key"
 
 # Redirect rules for SEO and user experience
 [[redirects]]
