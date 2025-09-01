@@ -31,8 +31,13 @@ exports.handler = async (event, context) => {
     // Parse the incoming webhook data from Tally
     const data = JSON.parse(event.body);
     
-    // Log the incoming data for debugging
-    console.log('Received webhook data:', JSON.stringify(data, null, 2));
+    // Conditional debug logging to avoid noisy logs + PII in production
+    const isDebug = (process.env.LOG_LEVEL || '').toLowerCase() === 'debug';
+    if (isDebug) {
+      console.log('Received webhook data:', JSON.stringify(data, null, 2));
+    } else {
+      console.log('Webhook received (redacted).');
+    }
 
     // Extract form fields from Tally webhook
     // Tally sends data in format: { eventId, eventType, createdAt, data: { fields: [...] } }
@@ -100,8 +105,13 @@ exports.handler = async (event, context) => {
       }
     });
 
-    // Log the mapped form data for debugging
-    console.log('Mapped form data:', JSON.stringify(formData, null, 2));
+    // Redacted mapping log in production
+    if (isDebug) {
+      console.log('Mapped form data:', JSON.stringify(formData, null, 2));
+    } else {
+      const redacted = { ...formData, email: !!formData.email, phone: !!formData.phone, ip_address: undefined, user_agent: undefined };
+      console.log('Mapped form data (redacted):', JSON.stringify(redacted));
+    }
 
     // Validate required fields
     if (!formData.email) {
@@ -126,7 +136,11 @@ exports.handler = async (event, context) => {
     
     formData.user_agent = event.headers['user-agent'];
 
-    console.log('Final form data before Supabase insert:', JSON.stringify(formData, null, 2));
+    if (isDebug) {
+      console.log('Final form data before Supabase insert:', JSON.stringify(formData, null, 2));
+    } else {
+      console.log('Final form data ready (redacted).');
+    }
 
     // Insert into Supabase
     const { data: insertedData, error } = await supabase

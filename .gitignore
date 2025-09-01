@@ -1,0 +1,29 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+coverage/
+
+# Environment
+.env
+.env.*
+
+# Platforms
+.netlify/
+.vercel/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
+*.sqlite
+*.local
+
