@@ -41,46 +41,51 @@ exports.handler = async (event, context) => {
     const formData = {};
     
     fields.forEach(field => {
-      // Handle email
-      if (field.key === 'question_RDZOyJ') {
+      console.log(`Processing field: ${field.key} = ${JSON.stringify(field.value)} | Label: "${field.label}"`);
+      
+      // Map based on field labels (more reliable than keys which can change)
+      const label = field.label?.toLowerCase() || '';
+      
+      if (label.includes('email')) {
         formData.email = field.value;
-      }
-      // Handle first name
-      else if (field.key === 'question_9721N5') {
+      } else if (label.includes('first name') || (label.includes('name') && !label.includes('form'))) {
         formData.first_name = field.value;
-      }
-      // Handle phone
-      else if (field.key === 'question_o20JLV') {
+      } else if (label.includes('phone')) {
         formData.phone = field.value;
-      }
-      // Handle gender - extract text from options
-      else if (field.key === 'question_GRoMAo') {
+      } else if (label.includes('gender')) {
         if (field.value && field.value.length > 0 && field.options) {
           const selectedOption = field.options.find(opt => opt.id === field.value[0]);
           formData.gender = selectedOption ? selectedOption.text : null;
         }
-      }
-      // Handle area - extract text from options
-      else if (field.key === 'question_O7jRM8') {
+      } else if (label.includes('area')) {
         if (field.value && field.value.length > 0 && field.options) {
           const selectedOption = field.options.find(opt => opt.id === field.value[0]);
           formData.area = selectedOption ? selectedOption.text : null;
         }
-      }
-      // Handle age range - extract text from options
-      else if (field.key === 'question_Vz9rOv') {
+      } else if (label.includes('age')) {
         if (field.value && field.value.length > 0 && field.options) {
           const selectedOption = field.options.find(opt => opt.id === field.value[0]);
           formData.age_range = selectedOption ? selectedOption.text : null;
         }
-      }
-      // Handle privacy policy consent
-      else if (field.key === 'question_Pz2oJb_a276fce3-5b76-4b23-8ec4-31911ed6aa1a') {
+      } else if (label.includes('privacy') || label.includes('data processing')) {
         formData.data_processing_consent = field.value === true;
-      }
-      // Handle women-only features consent
-      else if (field.key === 'question_Pz2oJb_b382c7d6-5638-4a19-bc85-b90ad95c6b26') {
+      } else if (label.includes('women') || label.includes('marketing')) {
         formData.women_only_features_consent = field.value === true;
+      }
+      
+      // Also handle checkboxes with multiple options
+      if (field.type === 'CHECKBOXES' && field.value && Array.isArray(field.value)) {
+        field.value.forEach(selectedId => {
+          const selectedOption = field.options?.find(opt => opt.id === selectedId);
+          if (selectedOption) {
+            const optionText = selectedOption.text.toLowerCase();
+            if (optionText.includes('privacy') || optionText.includes('data processing')) {
+              formData.data_processing_consent = true;
+            } else if (optionText.includes('women') || optionText.includes('marketing')) {
+              formData.women_only_features_consent = true;
+            }
+          }
+        });
       }
     });
 
