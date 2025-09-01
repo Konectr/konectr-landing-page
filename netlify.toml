@@ -1,0 +1,52 @@
+# Netlify configuration for Konectr Landing Page
+[build]
+  # No build command needed for static HTML
+  command = ""
+  # Publish the root directory
+  publish = "."
+
+[build.environment]
+  # Node version for any future builds
+  NODE_VERSION = "18"
+
+# Redirect rules for SEO and user experience
+[[redirects]]
+  # Redirect /form to the main page with form focus
+  from = "/form"
+  to = "/#cta"
+  status = 302
+
+[[redirects]]
+  # Redirect /waitlist to the main page with form focus
+  from = "/waitlist"
+  to = "/#cta"
+  status = 302
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Security headers
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+    # Performance headers
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    # HTML files should not be cached as aggressively
+    Cache-Control = "public, max-age=3600"
+
+# Custom domain configuration
+[context.production]
+  # Environment for production deployment
+  environment = { NODE_ENV = "production" }
+
+# Branch deploys for testing
+[context.branch-deploy]
+  # Environment for branch deployments
+  environment = { NODE_ENV = "staging" }
