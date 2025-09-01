@@ -84,8 +84,12 @@ exports.handler = async (event, context) => {
       }
     });
 
+    // Log the mapped form data for debugging
+    console.log('Mapped form data:', JSON.stringify(formData, null, 2));
+
     // Validate required fields
     if (!formData.email) {
+      console.error('Missing email field in form data');
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Email is required' })
@@ -96,6 +100,8 @@ exports.handler = async (event, context) => {
     formData.referral_source = 'tally_form';
     formData.ip_address = event.headers['x-forwarded-for'] || event.headers['x-real-ip'];
     formData.user_agent = event.headers['user-agent'];
+
+    console.log('Final form data before Supabase insert:', JSON.stringify(formData, null, 2));
 
     // Insert into Supabase
     const { data: insertedData, error } = await supabase
