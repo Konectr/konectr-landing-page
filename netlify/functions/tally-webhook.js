@@ -98,7 +98,16 @@ exports.handler = async (event, context) => {
 
     // Add metadata
     formData.referral_source = 'tally_form';
-    formData.ip_address = event.headers['x-forwarded-for'] || event.headers['x-real-ip'];
+    
+    // Handle IP address - extract first IP if multiple are present
+    const rawIpAddress = event.headers['x-forwarded-for'] || event.headers['x-real-ip'];
+    if (rawIpAddress) {
+      // Split by comma and take the first IP address
+      formData.ip_address = rawIpAddress.split(',')[0].trim();
+    } else {
+      formData.ip_address = null;
+    }
+    
     formData.user_agent = event.headers['user-agent'];
 
     console.log('Final form data before Supabase insert:', JSON.stringify(formData, null, 2));
