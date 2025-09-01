@@ -42,14 +42,24 @@ exports.handler = async (event, context) => {
     const formData = {};
     
     fields.forEach(field => {
-      console.log(`Processing field: ${field.key} = ${JSON.stringify(field.value)} | Label: "${field.label}"`);
+      console.log(`Processing field: ${field.key} = ${JSON.stringify(field.value)} | Label: "${field.label}" | Type: ${field.type}`);
       
-      // Map based on field labels (more reliable than keys which can change)
+      // Map based primarily on robust signals (field.type), with label as fallback
       const label = field.label?.toLowerCase() || '';
-      
-      if (label.includes('email')) {
-        formData.email = field.value;
-      } else if (label.includes('first name') || (label.includes('name') && !label.includes('form'))) {
+      const fieldType = field.type;
+
+      // EMAIL: Use INPUT_EMAIL type only, and never overwrite once set
+      if (!formData.email) {
+        if (fieldType === 'INPUT_EMAIL' && typeof field.value === 'string') {
+          formData.email = String(field.value).trim().toLowerCase();
+        } else if (label.includes('email') && typeof field.value === 'string' && field.value.includes('@')) {
+          // Fallback if type not provided by Tally for some reason
+          formData.email = String(field.value).trim().toLowerCase();
+        }
+      }
+
+      // FIRST NAME
+      if (label.includes('first name') || (label.includes('name') && !label.includes('form'))) {
         formData.first_name = field.value;
       } else if (label.includes('phone')) {
         formData.phone = field.value;
