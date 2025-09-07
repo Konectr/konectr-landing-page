@@ -1,8 +1,18 @@
+# Konectr Landing Page - Netlify Configuration
+# This file controls all build and deployment settings
+
 [build]
+  # Base directory where Netlify should look for the site
   base = "apps/web"
+  
+  # Publish directory (relative to base directory)
+  # This tells Netlify to publish the contents of apps/web/
   publish = "."
+  
+  # Functions directory (relative to base directory)
   functions = "netlify/functions"
 
+# Redirects for better UX
 [[redirects]]
   from = "/form"
   to = "/#cta"
@@ -13,12 +23,13 @@
   to = "/#cta"
   status = 302
 
-# Serve index.html for all routes (SPA behavior)
+# SPA fallback - serve index.html for all routes
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
+# Security headers
 [[headers]]
   for = "/*"
   [headers.values]
@@ -28,6 +39,7 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Cache-Control = "public, max-age=31536000"
 
+# HTML-specific caching
 [[headers]]
   for = "*.html"
   [headers.values]
