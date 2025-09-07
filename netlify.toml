@@ -1,7 +1,8 @@
 [build]
-  command = "npm install"
-  publish = "."
-  functions = "netlify/functions"
+  base = "apps/web"
+  command = "cd apps/web && npm install"
+  publish = "apps/web"
+  functions = "apps/web/netlify/functions"
 
 [build.environment]
   NODE_VERSION = "18"
@@ -15,6 +16,12 @@
   from = "/waitlist"
   to = "/#cta"
   status = 302
+
+# Serve index.html for all routes (SPA behavior)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 [[headers]]
   for = "/*"
