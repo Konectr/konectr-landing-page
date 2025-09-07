@@ -1,8 +1,8 @@
-# Konectr Landing Page
+# Konectr MVP - Monorepo
 
 🌟 **Real Adventures with Real People, Right Now**
 
-Professional landing page for Konectr - the social networking app that connects people for genuine real-world experiences.
+Monorepo for Konectr - the social networking platform that connects people for genuine real-world experiences. This repository contains both the web landing page and mobile application.
 
 ## 🚀 Live Site
 
@@ -11,12 +11,19 @@ Professional landing page for Konectr - the social networking app that connects 
 
 ## 🛠️ Tech Stack
 
+### Web Landing Page
 - **Frontend**: HTML5, CSS3, JavaScript
 - **Animations**: GSAP with ScrollTrigger
 - **Form**: Tally.so integration
-- **Database**: Supabase (secure backend)
 - **Deployment**: Netlify
 - **Domain**: konectrapp.com
+
+### Mobile App
+- **Framework**: Flutter (via FlutterFlow)
+- **State Management**: Provider/Riverpod
+- **Backend**: Supabase
+- **Platforms**: iOS & Android
+- **Design System**: Konectr brand guidelines
 
 ## 🔐 Security Features
 
@@ -38,13 +45,35 @@ Professional landing page for Konectr - the social networking app that connects 
 ## 🏗️ Project Structure
 
 ```
-├── index.html              # Main landing page
-├── docs/                   # Documentation
-│   ├── security-*.md       # Security implementation guides
-│   ├── mvp-architecture.md # Technical architecture
-│   └── *.sql              # Database setup scripts
-├── netlify.toml           # Netlify configuration
-└── README.md              # This file
+├── apps/
+│   ├── web/                    # Web landing page
+│   │   ├── index.html          # Main landing page
+│   │   ├── netlify.toml        # Netlify configuration
+│   │   ├── netlify/functions/  # Serverless functions
+│   │   └── package.json        # Web dependencies
+│   │
+│   └── mobile/                 # Mobile application
+│       └── konectr/           # Flutter project
+│           ├── android/       # Android specific
+│           ├── ios/          # iOS specific
+│           ├── lib/          # Flutter code
+│           │   └── src/      # Konectr domain structure
+│           │       ├── app/
+│           │       ├── features/
+│           │       ├── entities/
+│           │       └── shared/
+│           └── pubspec.yaml  # Flutter dependencies
+│
+├── docs/                      # Shared documentation
+│   ├── security-*.md         # Security implementation guides
+│   ├── mvp-architecture.md   # Technical architecture
+│   └── *.sql                # Database setup scripts
+│
+├── ops/                      # Operations & deployment
+│   └── policies/            # Database policies
+│
+├── KONECTR_MOBILE_RULES.md  # Engineering doctrine
+└── README.md                # This file
 ```
 
 ## 🚀 Deployment
@@ -57,12 +86,31 @@ This repository auto-deploys to Netlify:
 
 ## 🔧 Local Development
 
+### Web Landing Page
 ```bash
-# Clone the repository
-git clone https://github.com/YOUR-USERNAME/konectr-landing-page.git
+# Navigate to web directory
+cd apps/web
+
+# Install dependencies
+npm install
 
 # Open index.html in browser
 open index.html
+```
+
+### Mobile App
+```bash
+# Navigate to mobile directory
+cd apps/mobile/konectr
+
+# Get Flutter dependencies
+flutter pub get
+
+# Run on iOS simulator
+flutter run -d ios
+
+# Run on Android emulator
+flutter run -d android
 ```
 
 ## 📊 Performance

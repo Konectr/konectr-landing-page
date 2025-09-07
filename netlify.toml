@@ -1,11 +1,7 @@
 [build]
   base = "apps/web"
-  command = "cd apps/web && npm install"
-  publish = "apps/web"
-  functions = "apps/web/netlify/functions"
-
-[build.environment]
-  NODE_VERSION = "18"
+  publish = "."
+  functions = "netlify/functions"
 
 [[redirects]]
   from = "/form"
